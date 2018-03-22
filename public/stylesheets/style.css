@@ -1,0 +1,71 @@
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+    color: #00B7FF;
+}
+
+.mainBarPics {
+
+    max-height: 450px;
+    padding: 20px;
+}
+
+.mainBar {
+    background-color: #faf2cc;
+    margin: 0px;
+    text-align: center;
+    width: 100%;
+    padding: 0px;
+}
+.mainBar form{
+    padding-top: 100px;
+}
+.search_form {
+    padding-bottom: 20px;
+}
+
+.search_form input {
+    padding: 12px 60px;
+    font-size: 14px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    background-image: url('../images/Search50.ico');
+    background-position: left;
+    background-size: 40px;
+    background-repeat: no-repeat;
+}
+
+.search_form button {
+    padding: 12px 14px;
+    font-size: 14px;
+    margin: 8px 0;
+}
+
+.edit_buttons{
+    text-align: right;
+    width:100%;
+
+
+}
+.edit_buttons button{
+    padding: 12px 14px;
+    font-size: 14px;
+    margin: 8px 0;
+    position: relative;
+}
+
+.about_section{
+    padding:100px 30px 50px 30px;
+}
+
+.map{
+    padding-top:100px;
+
+}
+#map {
+
+    height: 450px;
+    width: 100%
+}
