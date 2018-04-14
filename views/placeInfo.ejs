@@ -1,0 +1,43 @@
+
+<div class="col-md-10">
+    <div class="row">
+        <div class="col-md-6">
+            <img alt="Dictionary Document Scan" id="dictionary_scan"
+                 src="images/strona014_750px.jpg" class="img-thumbnail">
+        </div>
+        <div class="col-md-6">
+            <dl class="row">
+                <dt class="col-sm-4">Name:</dt>
+                <dd class="col-sm-8" id="placeName"><%= place.recordset[0].name%></dd>
+                <dt class="col-sm-4">Historical Name:</dt>
+                <dd class="col-sm-8"><%= place.recordset[0].name%></dd>
+
+                <dt class="col-sm-4">Type:</dt>
+                <dd class="col-sm-8">village</dd>
+
+                <dt class="col-sm-4">Voivodeship:</dt>
+                <dd class="col-sm-8"><%= place.recordset[0].wojewodztwo%></dd>
+                <dt class="col-sm-4">Country:</dt>
+                <dd class="col-sm-8"><%= place.recordset[0].powiat%></dd>
+                <dt class="col-sm-4">Administrative district:</dt>
+                <dd class="col-sm-8"><%= place.recordset[0].gmina%></dd>
+
+                <dt class="col-sm-4">Description</dt>
+                <dd class="col-sm-8">
+                    <dl class="row">
+                        <dt class="col-sm-4">Foreign name: <%= place.recordset[0].foreignname%></dt>
+                        <dd class="col-sm-8"> <%= place.recordset[0].description %></dd>
+                    </dl>
+                </dd>
+                <dt class="col-sm-4">Coordinates: </dt>
+                <dd class="col-sm-8">51° 1′ 59.88″ N, 18° 12′ 0″ E</dd>
+            </dl>
+            <div class="row">
+
+                <div class="col-md-12 map">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
