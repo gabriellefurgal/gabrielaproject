@@ -6,17 +6,17 @@ var sql = require("mssql/msnodesqlv8");
 
 var configSilesiaMgrDB = {
     driver: 'msnodesqlv8',
-    connectionString: 'Driver={SQL Server Native Client 11.0};Server={DESKTOP-OEJEP8S\\SQLEXPRESS};Database={SilesiaMgrDB};Trusted_Connection={yes};',
+    connectionString: 'Driver={SQL Server Native Client 11.0};Server={LOCALHOST\\SQLEXPRESS};Database={SilesiaMgrDB};Trusted_Connection={yes};'
 };
 var configSilesiaDictionaryDB={
 
     driver: 'msnodesqlv8',
-    connectionString: 'Driver={SQL Server Native Client 11.0};Server={LOCALHOST\\SQLEXPRESS};Database={Silesia};Trusted_Connection={yes};',
+    connectionString: 'Driver={SQL Server Native Client 11.0};Server={LOCALHOST\\SQLEXPRESS};Database={Silesia};Trusted_Connection={yes};'
 };
 var configTerytDB={
 
     driver: 'msnodesqlv8',
-    connectionString: 'Driver={SQL Server Native Client 11.0};Server={LOCALHOST\\SQLEXPRESS};Database={[silesiaApplicationDataBase]};Trusted_Connection={yes};',
+    connectionString: 'Driver={SQL Server Native Client 11.0};Server={LOCALHOST\\SQLEXPRESS};Database={silesiaApplicationDataBase};Trusted_Connection={yes};'
 };
 function createPlacesTable(){
   //  var conn = new sql.Connection(dbConfig)
@@ -54,7 +54,7 @@ var  sendRequestToDictionaryDB = function(query, callback ){
     conn.connect(function(err){
         if(err){
             console.log("Connection error: "+err);
-            ress.send(err);
+            callback(err);
         }
         req.query(query, function (err,recordsset) {
             if(err){
@@ -70,51 +70,50 @@ var  sendRequestToDictionaryDB = function(query, callback ){
 }
 
 
-    var sendRequestToApplicationDB= function(res, query){
-    sql.ConnectionPool(configSilesiaMgrDB, function (err) {
-        if (err) {
-            console.log("Error while connecting database :- " + err);
-            res.send(err);
-        }
-        else {
-            // create Request object
-            var request = new sql.Request();
-            // query to the database
-            request.query(query, function (err, res) {
-                if (err) {
-                    console.log("Error while querying database :- " + err);
-                    res.send(err);
+    var sendRequestToApplicationDB= function(query, callback ){
+        var conn = new sql.ConnectionPool(configSilesiaMgrDB);
+        var req = new sql.Request(conn);
+        conn.connect(function(err){
+            if(err){
+                console.log("Connection error: "+err);
+                callback(err);
+            }
+            req.query(query, function (err,recordsset) {
+                if(err){
+                    console.log("Request error: "+err);
+                    callback(err);
+                }else{
+                    console.log(recordsset);
+                    callback(recordsset);
                 }
-                else {
-                    res.send(res);
-                }
+                conn.close();
             });
-        }
-    });
+        });
 }
 
-   var  sendRequestToGUSDB= function(res, query){
-       sql.ConnectionPool(configTerytDB, function (err) {
-           if (err) {
-               console.log("Error while connecting database :- " + err);
-               res.send(err);
+   var  sendRequestToGUSDB= function(query, callback ){
+
+       var conn = new sql.ConnectionPool(configTerytDB);
+       var req = new sql.Request(conn);
+       conn.connect(function(err){
+           if(err){
+               console.log("Connection error: "+err);
+               callback(err);
            }
-           else {
-               // create Request object
-               var request = new sql.Request();
-               // query to the database
-               request.query(query, function (err, res) {
-                   if (err) {
-                       console.log("Error while querying database :- " + err);
-                       res.send(err);
-                   }
-                   else {
-                       res.send(res);
-                   }
-               });
-           }
+           req.query(query, function (err,recordsset) {
+               if(err){
+                   console.log("Request error: "+err);
+                   callback(err);
+               }else{
+                   console.log(recordsset);
+                   callback(recordsset);
+               }
+               conn.close();
+           });
        });
    }
 
 
 module.exports.functionDB= sendRequestToDictionaryDB;
+   module.exports.GUSfunctionDB= sendRequestToGUSDB;
+module.exports.sendRequestToApplicationDB= sendRequestToApplicationDB;

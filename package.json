@@ -6,6 +6,8 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "@google/maps": "^0.4.6",
+    "bcryptjs": "^2.4.3",
     "body-parser": "~1.18.2",
     "bootstrap": "^4.0.0-alpha.6",
     "cookie-parser": "~1.4.3",
@@ -15,6 +17,9 @@
     "ejs": "~2.5.7",
     "escape-html": "^1.0.3",
     "express": "~4.15.5",
+    "express-partials": "^0.3.0",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.1.2",
     "htmlparser": "^1.7.7",
     "jQuery": "^1.7.4",
     "jquery": "^1.9.1",
@@ -24,6 +29,8 @@
     "node-csv": "^0.1.2",
     "node-mssql": "0.0.1",
     "p5": "^0.6.0",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
     "popper.js": "^1.12.9",
     "serve-favicon": "~2.4.5",
     "xml2js": "^0.4.19",

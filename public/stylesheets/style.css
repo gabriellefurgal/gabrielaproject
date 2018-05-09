@@ -14,14 +14,54 @@ a {
 
 .mainBar {
     background-color: #faf2cc;
+    background-image: url("../images/map1300.jpg");
     margin: 0px;
+    min-height: 300px;
     text-align: center;
     width: 100%;
     padding: 0px;
+    border-bottom: 2px solid black;
 }
-.mainBar form{
+
+.log_in form {
+    color: white;
+    background-color: rgba(0, 0, 0, .5);
+    background-blend-mode: lighten;
+    padding: 30px;
+    margin: 20px;
+    border-radius: 5%;
+}
+
+.sign_in form {
+    color: white;
+    background-color: rgba(0, 0, 0, .5);
+    background-blend-mode: lighten;
+    padding: 30px;
+    margin: 20px;
+    border-radius: 5%;
+}
+section.success {
+      padding: 5px;
+    margin-top: 100px;
+}
+section.errors{
+    margin-top: 100px;
+    padding: 5px;
+
+}
+section.errors ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.sign_in form .btn {
+    margin-top: 30px;
+}
+
+.mainBar form {
     padding-top: 100px;
 }
+
 .search_form {
     padding-bottom: 20px;
 }
@@ -43,29 +83,52 @@ a {
     margin: 8px 0;
 }
 
-.edit_buttons{
+.edit_buttons {
     text-align: right;
-    width:100%;
-
+    width: 100%;
 
 }
-.edit_buttons button{
+
+.edit_buttons button {
     padding: 12px 14px;
     font-size: 14px;
     margin: 8px 0;
     position: relative;
 }
 
-.about_section{
-    padding:100px 30px 50px 30px;
+.about_section {
+    padding: 100px 30px 50px 30px;
 }
 
-.map{
-    padding-top:100px;
+.map {
+    padding-top: 100px;
 
 }
+
 #map {
 
     height: 450px;
     width: 100%
+}
+
+/*just for input form for references*/
+.myEditAbleDiv{
+    color: #464a4c;
+    opacity: 1;
+    min-height: 100px;
+    display:inline-block;
+    overflow:hidden;
+    width: 100%;
+    padding: .5rem .75rem;
+    font-size: 1rem;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+    font-family: sans-serif;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+}
+.myEditAbleDiv:focus {
+    border-color: #5cb3fd;
+
 }

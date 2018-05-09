@@ -1,43 +1,201 @@
-
 <div class="col-md-10">
     <div class="row">
         <div class="col-md-6">
             <img alt="Dictionary Document Scan" id="dictionary_scan"
-                 src="images/strona014_750px.jpg" class="img-thumbnail">
+                 src="images/Scans750px/<%= scanFile.recordset[0].fileName %>.jpg" class="img-thumbnail">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" id="placeInformationSection">
             <dl class="row">
                 <dt class="col-sm-4">Name:</dt>
-                <dd class="col-sm-8" id="placeName"><%= place.recordset[0].name%></dd>
-                <dt class="col-sm-4">Historical Name:</dt>
-                <dd class="col-sm-8"><%= place.recordset[0].name%></dd>
+                <dd class="col-sm-8" id="placeName"><%= place.recordset[0].name %></dd>
+                <dt class="col-sm-4">Present Name:</dt>
+                <dd class="col-sm-8" id="placePresentName"><%= place.recordset[0].presentName %></dd>
 
                 <dt class="col-sm-4">Type:</dt>
                 <dd class="col-sm-8">village</dd>
 
                 <dt class="col-sm-4">Voivodeship:</dt>
-                <dd class="col-sm-8"><%= place.recordset[0].wojewodztwo%></dd>
+                <dd class="col-sm-8" id="placeVoivodeship"><%= placeGUS.recordset[0].voivodeship %></dd>
                 <dt class="col-sm-4">Country:</dt>
-                <dd class="col-sm-8"><%= place.recordset[0].powiat%></dd>
-                <dt class="col-sm-4">Administrative district:</dt>
-                <dd class="col-sm-8"><%= place.recordset[0].gmina%></dd>
-
-                <dt class="col-sm-4">Description</dt>
-                <dd class="col-sm-8">
+                <dd class="col-sm-8" id="placeCountry">
                     <dl class="row">
-                        <dt class="col-sm-4">Foreign name: <%= place.recordset[0].foreignname%></dt>
-                        <dd class="col-sm-8"> <%= place.recordset[0].description %></dd>
+                        <dt class="col-sm-4">dictionary: <%= place.recordset[0].powiat %></dt>
+                        <dd class="col-sm-8">present: <%= placeGUS.recordset[0].country %></dd>
                     </dl>
                 </dd>
-                <dt class="col-sm-4">Coordinates: </dt>
-                <dd class="col-sm-8">51° 1′ 59.88″ N, 18° 12′ 0″ E</dd>
-            </dl>
-            <div class="row">
+                <dt class="col-sm-4">Administrative district:</dt>
+                <dd class="col-sm-8" id="placeCommunity"><%= placeGUS.recordset[0].community %></dd>
+                <dt class="col-sm-4">Foreign name:</dt>
+                <dd class="col-sm-8"><%= place.recordset[0].foreignname %></dd>
+                <dt class="col-sm-4">Short Description</dt>
+                <dd class="col-sm-8"><%= place.recordset[0].shortdescription %></dd>
+                <dt class="col-sm-4">Description</dt>
+                <dd class="col-sm-8"><%= place.recordset[0].description %></dd>
+                <dt class="col-sm-4">References:</dt>
+                <dd class="col-sm-8">
+                    <ul>
+                        <% references.forEach(function(reference){ %>
+                        <li><%= reference.name %>, <%= reference.year %>,<%= reference.source %>, <%= reference.page %>
+                            ;
+                        </li>
 
-                <div class="col-md-12 map">
-                    <div id="map"></div>
+                        <% }); %>
+                    </ul>
+                </dd>
+                <dt class="col-sm-4">Coordinates:</dt>
+                <dd class="col-sm-8" id="location" name="location">(
+                    <p style="display:inline" id="locationLat" name="locationLat"/>
+                    <p style="display:inline">&deg;, </p>
+                    <p style="display:inline" id="locationLng" name="locationLng"/>
+                    <p style="display:inline">&deg; )</p>
+                </dd>
+
+            </dl>
+        </div>
+        <div class="col-md-6" style="display: none;" id="placeInformationForm">
+            <form action="/save" role="form" method="post">
+
+
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class="form-group mb-2">
+                            <label for="placeName">
+                                Name
+                            </label>
+                            <input class="form-control" id="placeName" name="placeName" type="text"
+                                   value="<%= place.recordset[0].name %>">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="countryDic">
+                                Country dictionary
+                            </label>
+                            <input class="form-control" id="countryDic" name="countryDic" type="text"
+                                   value="<%= place.recordset[0].powiat %>">
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label for="countryDic">
+                                Community dictionary
+                            </label>
+                            <input class="form-control" id="countryDic" name="countryDic" type="text"
+                                   value="<%= place.recordset[0].gmina %>">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="foreignName">
+                                Foreign name
+                            </label>
+                            <input class="form-control" id="foreignName" name="foreignName" type="text"
+                                   value="<%= place.recordset[0].foreignname %>">
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+
+                        <div class="form-group mb-2">
+
+                            <label for="presentName">
+                                Present Name
+                            </label>
+                            <input class="form-control" id="presentName" name="presentName" type="text"
+                                   value="<%= place.recordset[0].presentName %>">
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label for="countryPresent">
+                                Country present
+                            </label>
+                            <input class="form-control" id="countryPresent" name="countryPresent" type="text"
+                                   value="<%= placeGUS.recordset[0].country %>">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="communityPresent">
+                                Community present
+                            </label>
+                            <input class="form-control" id="communityPresent" name="communityPresent" type="text"
+                                   value="<%= placeGUS.recordset[0].community %>">
+                        </div>
+
+                    </div>
+                    <div class="col-sm-2">
+                        <div class="form-group mb-1">
+                            <label for="dropdownMenuLink">
+                                Type
+                            </label>
+                            <div class="dropdown show">
+                                <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                   id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                   aria-expanded="false">
+                                    Select
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <a class="dropdown-item" href="#">village</a>
+                                    <a class="dropdown-item" href="#">city</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <div class="form-group mb-2">
+
+                            <label for="shortDescription">
+                                Short description
+                            </label>
+                            <input class="form-control" id="shortDescription" name="shortDescription" type="text"
+                                   value="<%= place.recordset[0].shortdescription %>">
+                        </div>
+
+                        <div class="form-group mb-2">
+                            <label for="description">
+                                Description
+                            </label>
+                            <div class="myEditAbleDiv" contentEditable="true" id="description" name="description" type="text"><%= place.recordset[0].description %></div>
+                        </div>
+                        <div class="form-group mb-2 ">
+                            <label for="references">
+                                References
+                            </label>
+                            <div contentEditable="true" class="myEditAbleDiv" id="references" name="references"><% references.forEach(function(reference){ %>
+                                <%= reference.name %>, <%= reference.year %>,<%= reference.source %>, <%= reference.page %> ;<% }); %></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group mb-2">
+                            <label for="coordinates">
+                                Coordinates
+                            </label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label for="coordinatesLat">
+                                        Latitude
+                                    </label>
+                                    <input class="form-control" id="coordinatesLat" name="coordinatesLat" type="text"
+                                           value="">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label for="coordinatesLng">
+                                        Longitude
+                                    </label>
+                                    <input class="form-control" id="coordinatesLng" name="coordinatesLng" type="text"
+                                           value="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
+    <div class="row">
+
+        <div class="col-md-12 map">
+            <div id="map"></div>
+        </div>
+    </div>
+
+
 </div>
