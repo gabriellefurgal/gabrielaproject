@@ -3,52 +3,93 @@ var router = express.Router();
 var databases = require('../public/javascripts/mssql');
 var url = require('url');
 
-findUserByEmail = function (email) {
+findUserByEmail = function (email, callback) {
     var query = "SELECT * FROM [dbo].[users]WHERE [email] = '" + email + "'";
-    return databases.sendRequestToApplicationDB(query, function (results) {
-        if (results.recordset.length > 0) {
-            return true;
-        }else{
-            return false;
+    databases.sendRequestToApplicationDB(query, function (res, err) {
+        if (err) return callback(err);
+        if (res.recordset.length > 0) {
+            return callback(null, true);
+        } else {
+            return callback(null, null);
         }
 
     });
 }
-findUserByPassword = function (credentials) {
+checkUserWithPassword = function (credentials, callback) {
     var query = "SELECT * FROM [dbo].[users]WHERE [email] = '" + credentials.email + "' AND [password]='" + credentials.password + "'";
-    return databases.sendRequestToApplicationDB(query, function (results) {
-        if (results.recordset.length > 0) {
-            return true;
-        }else{
-            return false;
+    databases.sendRequestToApplicationDB(query, function (res, err) {
+        if (err) return callback(err);
+        if (res.recordset.length > 0) {
+            var user={ Name:res.recordset[0].userFirstName,
+            Email: res.recordset[0].email}
+            return callback(null, user);
+        } else {
+            return callback(null, null);
         }
 
     });
 }
+
 router.post('/logIn', function (req, res, next) {
 
     req.check('logEmail').isEmail().withMessage('It must be an email');
     req.check('logPassword', 'Passwords must be at least 5 chars long').isLength({min: 5})
     req.check('logPassword', 'Passwords must contain at least one number').matches(/\d/);
-    req.check('logPassword',"Password doesn't match the email.").custom(function (value) {
-     !findUserByPassword({password: value, email: req.body.logEmail});
-    });
-    req.check('logEmail','There is no account registered with this email.').custom(function (value) {
-      !findUserByEmail(value);
-    });
-    var errors = req.validationErrors();
-    if (errors) {
+    // req.check('logPassword',"Password doesn't match the email.").custom(function (value) {
+    //  !findUserByPassword({password: value, email: req.body.logEmail});
+    // });
+    function checkSession(user) {
+        var errors = req.validationErrors();
+        if (errors) {
 
-        req.session.errors = errors;
-        req.session.success = false;
+            req.session.errors = errors;
+            req.session.success = false;
 
-    } else {
+        } else {
 
-        req.session.success = true;
+            req.session.success = true;
+           req.session.user= user;
 
+        }
     }
-    res.redirect(url.format({pathname: "/", query: {'success': req.session.success, 'resource': 'logIn'}}));
-    console.log(req.session);
+
+    function checkCredentials() {
+        return new Promise((resolve, reject)=>{
+  findUserByEmail(req.body.logEmail, function (err, user) {
+            if (user == true) {
+                req.check('logEmail', "There is no account registered with this email.").equals(req.body.logEmail);
+            } else if (user == null) {
+                req.check('logEmail', "There is no account registered with this email.").equals(null);
+            }
+        });
+        checkUserWithPassword({
+            email: req.body.logEmail,
+            password: req.body.logPassword
+        }, function (err, userFound) {
+            if (userFound) {
+                req.check('logPassword', "Password doesn't match the email..").equals(req.body.logPassword);
+                    resolve(userFound);
+            } else if (userFound == null) {
+                req.check('logPassword', "Password doesn't match the email.").equals(null);
+                reject(false);
+            }
+        });
+
+        });
+    }
+    function successCallback(userFound) {
+        checkSession(userFound);
+        res.cookie('userCookie',userFound);
+        res.redirect(url.format({pathname: "/", query: {'success': req.session.success, 'resource': 'logIn'}}));
+    }
+
+    function failureCallback() {
+        checkSession();
+        res.redirect(url.format({pathname: "/", query: {'success': req.session.success, 'resource': 'logIn'}}));
+    }
+
+    checkCredentials().then(successCallback, failureCallback);
+
 });
 
 router.get('/logIn', function (req, res) {

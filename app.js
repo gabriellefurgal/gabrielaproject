@@ -39,8 +39,6 @@ app.use(expressSession({saveUninitialized: true,
     secret: "This is a secret"}));
 app.use('/', index);
 app.use('/users', users);
-app.use('/indexSignIn',indexSignIn);
-app.use('/indexLogIn',indexLogIn);
 app.use(placeInfo);
 app.use(signIn);
 app.use(logIn);

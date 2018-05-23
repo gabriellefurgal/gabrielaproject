@@ -18,152 +18,139 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <nav class="navbar fixed-top navbar-toggleable-md navbar-light bg-faded navbar-inverse bg-inverse">
+            <% if(!userSession || userSession == "undefined"){ %>
+            <div id="navbar">
+                <% include navLogIn.ejs %>
+            </div>
 
-                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                        data-target="#bs-example-navbar-collapse-1">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <a class="navbar-brand" href="#">Master thesis application</a>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                    <ul class="navbar-nav ml-md-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" name="logIn" id="logIn" href="#logIn">Log in <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" name="signIn" id="signIn" href="#signIn">Sign up <span class="sr-only">(current)</span></a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            <% }else{ %>
+            <div id="navbar">
+                <% include navLogOut.ejs %>
+            </div>
+            <% } %>
             <div class="row">
                 <div class="col-md-12" style="padding:0px">
                     <div class="row mainBar">
-                        <div class="col-md-6" >
+                        <div class="col-md-6">
+                            <% if(!userSession){ %>
                             <div id="alerts">
-                            <% if (success){ %>
-                            <section class="success">
-                                <div class="alert alert-success">
-                                    <% if (resource=='signIn'){%>
-                                    <h2>Successful Validation! You are registered.</h2>
-                                    <% }else{%>
-                                    <h2>Welcome! You are logged in as.</h2>
-                                    <% }%>
-                                </div>
-                            </section>
-                            <% }else{ %>
-                            <% if(errors){ %>
-                            <section class="errors">
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        <% errors.forEach(function(error){ %>
-                                        <li><%=error.msg %></li>
-                                        <% }); %>
-                                    </ul>
-                                </div>
-                            </section>
+                                <% if (success && resource == 'signIn'){ %>
+                                <section class="success">
+                                    <div class="alert alert-success">
+                                        <h2>Successful Validation! You are registered.</h2>
+                                    </div>
+                                </section>
+                                <% }else{ %>
+                                <% if(errors){ %>
+                                <section class="errors">
+                                    <div class="alert alert-danger">
+                                        <ul>
+                                            <% errors.forEach(function(error){ %>
+                                            <li><%= error.msg %></li>
+                                            <% }); %>
+                                        </ul>
+                                    </div>
+                                </section>
 
-                            <% }%>
-                            <%}%>
+                                <% } %>
+                                <% } %>
+                            </div>
                         </div>
-                        </div>
+                        <% } %>
                         <!--sign in log in-->
                         <div class="col-md-6">
 
 
-                        <div style="display: none" id="signInForm"><% include signIn.ejs %></div>
-                        <div style="display: none" id="logInForm"><% include logIn.ejs %></div>
-                        </div>
-                    </div>
-                    </div>
-
-                </div>
-                <div class="col-md-12">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <form class="form-inline search_form" action="searchForm" method="post">
-                                <input class="form-control mr-sm-2" type="text" name="searchValue">
-                                <button class="btn btn-primary my-2 my-sm-0" type="submit" id="searchButton">
-                                    Search
-                                </button>
-                            </form>
-                        </div>
-                        <div class="col-md-6">
-
-                            <div class="btn-group-float-right edit_buttons" role="group">
-
-                                <button class="btn btn-secondary" onclick="changeToForm()" type="button">
-                                    Improve
-                                    </button>
-                                <button class="btn btn-secondary" type="button">
-                                    Rate
-                                </button>
-                                <!--<div class="dropdown">-->
-                                <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                    See Version
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="#">Version 1</a>
-                                    <a class="dropdown-item" href="#">Version 2</a>
-                                    <a class="dropdown-item" href="#">Version 3</a>
-                                </div>
-
-                                <!--</div>-->
-
-                                <button class="btn btn-secondary" type="button">
-                                    Save
-                                </button>
-
+                            <div style="display: none" id="signInForm">
+                                <% include signIn.ejs %>
+                            </div>
+                            <div style="display: none" id="logInForm">
+                                <% include logIn.ejs %>
                             </div>
                         </div>
                     </div>
-
                 </div>
+
             </div>
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="list-group">
-                        <a href="#" class="list-group-item list-group-item-action active">Home</a>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-6">
+                        <form class="form-inline search_form" action="searchForm" method="post">
+                            <input class="form-control mr-sm-2" type="text" name="searchValue">
+                            <button class="btn btn-primary my-2 my-sm-0" type="submit" id="searchButton">
+                                Search
+                            </button>
+                        </form>
+                    </div>
+                    <% if(userSession) { %>
+                    <div class="col-md-6">
 
-                        <div class="list-group-item">
-                            <h4 class="list-group-item-heading">
-                                Voivodeships
-                            </h4>
-                        </div>
-                        <div class="list-group-item justify-content-between">
-                            Country / powiaty<span class="badge badge-default badge-pill">14</span>
-                        </div>
+                        <div class="btn-group-float-right edit_buttons" role="group">
 
-                        <a href="#" class="list-group-item list-group-item-action justify-content-between">City/Village
-                            / miejscowosc
-                            <span class="badge bg-white badge-pill">14</span></a>
-                        <div class="list-group-item">
-                            Some city
+                            <button class="btn btn-secondary" onclick="changeToForm()" type="button">
+                                Improve
+                            </button>
+                            <button class="btn btn-secondary" type="button">
+                                Rate
+                            </button>
+                            <!--<div class="dropdown">-->
+                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                See Version
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Version 1</a>
+                                <a class="dropdown-item" href="#">Version 2</a>
+                                <a class="dropdown-item" href="#">Version 3</a>
+                            </div>
+
+                            <!--</div>-->
+
+                            <button class="btn btn-secondary" type="button">
+                                Save
+                            </button>
+
                         </div>
-                        <a href="#" class="list-group-item active">
-                            Some other city
-                        </a>
                     </div>
                 </div>
-                <% include placeInfo.ejs %>
-
+                <% } %>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action active">Home</a>
 
+                    <div class="list-group-item">
+                        <h4 class="list-group-item-heading">
+                            Voivodeships
+                        </h4>
+                    </div>
+                    <div class="list-group-item justify-content-between">
+                        Country / powiaty<span class="badge badge-default badge-pill">14</span>
+                    </div>
 
-            <!--Okkk down in Help and about section-->
-            <% include about.ejs %>
+                    <a href="#" class="list-group-item list-group-item-action justify-content-between">City/Village
+                        / miejscowosc
+                        <span class="badge bg-white badge-pill">14</span></a>
+                    <div class="list-group-item">
+                        Some city
+                    </div>
+                    <a href="#" class="list-group-item active">
+                        Some other city
+                    </a>
+                </div>
+            </div>
+            <% include placeInfo.ejs %>
 
         </div>
+
+
+        <!--Okkk down in Help and about section-->
+        <% include about.ejs %>
+
     </div>
+</div>
 </div>
 
 
@@ -185,37 +172,44 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFIRySRCulh5sctkrYE3ODCbOzc2AmPSo&callback=initMap"
         async defer></script>
 <script>
-//    var $loadForm = $('#loadForm');
-var url= new URL(window.location);
-var $resource = url.searchParams.get('resource');
-  var $success= url.searchParams.get('status');
-  if($resource!=null){if($resource=='logIn' && !$success){
-      document.getElementById('logInForm').style.display='block';
-  }}else if($resource=='signIn' && !$success){
-      document.getElementById('signInForm').style.display='block';
-  }else{
-      document.getElementById('alerts').style.display='none';
-  }
+    //    var $loadForm = $('#loadForm');
+    var url = new URL(window.location);
+    var $resource = url.searchParams.get('resource');
+    var $success = url.searchParams.get('status');
+    if ($resource != null) {
+        if ($resource == 'logIn' && !$success) {
+            document.getElementById('logInForm').style.display = 'block';
+        }
+    } else if ($resource == 'signIn' && !$success) {
+        document.getElementById('signInForm').style.display = 'block';
+    } else {
+        document.getElementById('alerts').style.display = 'none';
+    }
+    if ($success == null) {
+        document.getElementById('logInForm').style.display = 'none';
+        document.getElementById('signInForm').style.display = 'none';
+    }
 
     $('#signIn').click(function () {
-        document.getElementById('signInForm').style.display='block';
-        document.getElementById('logInForm').style.display='none';
-        if($resource!=null){
-      if($success){
-          document.getElementById('alerts').style.display='none';
-      }else if($resource=='logIn'){
-          document.getElementById('alerts').style.display='none';
-      }}
+        document.getElementById('signInForm').style.display = 'block';
+        document.getElementById('logInForm').style.display = 'none';
+        if ($resource != null) {
+            if ($success) {
+                document.getElementById('alerts').style.display = 'none';
+            } else if ($resource == 'logIn') {
+                document.getElementById('alerts').style.display = 'none';
+            }
+        }
     });
     $('#logIn').click(function () {
-        document.getElementById('signInForm').style.display='none';
-        document.getElementById('logInForm').style.display='block';
-        if($resource!=null) {
-        if($success){
-            document.getElementById('alerts').style.display='none';
-        }else if($resource=='signIn'){
-            document.getElementById('alerts').style.display='none';
-        }
+        document.getElementById('signInForm').style.display = 'none';
+        document.getElementById('logInForm').style.display = 'block';
+        if ($resource != null) {
+            if ($success) {
+                document.getElementById('alerts').style.display = 'none';
+            } else if ($resource == 'signIn') {
+                document.getElementById('alerts').style.display = 'none';
+            }
         }
     });
 

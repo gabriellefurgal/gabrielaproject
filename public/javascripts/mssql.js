@@ -40,7 +40,7 @@ var req = new sql.Request(connMgrDB);
            console.log("Request error: "+err);
            return;
        }else{
-           console.log(result);
+          // console.log(result);
        }
        connMgrDB.close();
    });
@@ -61,7 +61,7 @@ var  sendRequestToDictionaryDB = function(query, callback ){
                 console.log("Request error: "+err);
                callback(err);
             }else{
-                console.log(recordsset);
+              //  console.log(recordsset);
                 callback(recordsset);
             }
             conn.close();

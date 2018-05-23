@@ -6,7 +6,7 @@ var url = require('url');
 /* GET home page. */
 router.get('/home', function (req, res, next) {
 
-    res.render('index', {title: 'Express'});
+    res.redirect("/");
 });
 
 //GET API
@@ -72,7 +72,9 @@ router.get("/", function (req, res) {
                             scanFile: ScanfileName,
                             success: req.session.success,
                             errors: req.session.errors,
-                            resource: req.query.resource
+                            resource: req.query.resource,
+                            userSession: req.session.user,
+                            cookies: req.cookies
                         });
 
                     }
@@ -88,14 +90,14 @@ console.log(req.session);
 console.log(req.cookies);
 });
 
-
-router.get('/indexLogIn', function (req, res) {
-    res.redirect('/indexLogIn');
+router.get("/logOut",function(req,res){
+    req.session.errors = null;
+    req.session.success = null;
+    // req.session.user=null;
+    req.session.destroy();
+   res.clearCookie("userCookie");
+    res.redirect("/");
 });
-router.get('/indexSignUp', function (req, res) {
-    res.redirect('/indexSignUp');
-});
-
 
 //poczatek domyslnie do usuniecia
 

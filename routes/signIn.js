@@ -5,7 +5,7 @@ const check = require('express-validator/check')
 var url = require('url');
 var bcrypt = require('bcryptjs');
 
-
+var user = null;
 addNewUser = function (user, f) {
     var query = "INSERT INTO [dbo].[users]([userName],[userFirstName],[userLastName],[email],[password]) VALUES('" + user.userName + "', '" + user.userFirstName + "', '" + user.userLastName + "', '" + user.email + "', '" + user.password + "')";
     databases.sendRequestToApplicationDB(query, function (err, result) {
@@ -17,19 +17,28 @@ addNewUser = function (user, f) {
 
 };
 
-findUserByEmail = function (email,callback) {
+var findUserByEmail = function (email) {
 
-    var query = "SELECT * FROM [dbo].[users]WHERE [email] = '" + email + "'";
-
-    return databases.sendRequestToApplicationDB(query, function (err,results) {
-        return results[0];
-    }).catch(function(err) {
-        console.log("Error verifying email...");
-        console.log(err);
-        return err;
-        throw err;
+    var query = "SELECT * FROM [SilesiaMgrDB].[dbo].[users] WHERE [email] = '" + email + "';";
+    console.log("Im in Ssssearch");
+    return new Promise((resolve, reject)=>{
+        databases.sendRequestToApplicationDB(query, function (res, err) {
+            console.log("Im in Ssssearch2");
+            if (err) return callback(err);
+            if (res.recordset.length) {
+                user = true;
+                resolve(true);
+            }else{
+                user = null;
+                reject(null);
+            }
     });
+
+    //
+     });
+    // callback(null,user);
 };
+
 
 router.post('/signIn', function (req, res, next) {
     const userName = req.body.userName;
@@ -52,39 +61,17 @@ router.post('/signIn', function (req, res, next) {
     req.check('password', 'passwords must be at least 5 chars long').isLength({min: 5})
     req.check('password', 'passwords must contain at least one number').matches(/\d/);
     req.check('passwordConfirmation', 'passwords must be the same as password confirmation').equals(req.body.password);
-    req.check('email','This email is already in use.').custom(function (value) {
-        // var user =  findUserByEmail(value,function(err){
-        //     console.log('IMMM HEEREREEE!!!!');
-        //     var query = "SELECT * FROM [dbo].[users]WHERE [email] = '" + email + "'";
-        //
-        //     return databases.sendRequestToApplicationDB(query, function (results) {
-        //         return results[0];
-        //     }).catch(function(err) {
-        //         console.log("Error verifying email...");
-        //         console.log(err);
-        //         throw err;
-        //     });});
 
-       return findUserByEmail(value, function (err) {
-            if (err) {
-                console.log(err);
-                return true;
-            }
-        });
-
-
-        // if(user) {
-        //     throw new Error('this email already in use');
-        //     return user;
-        // }else{
-        //     return true;
-        // }
-
-           // return findUserByEmail(value).then(function(user){
-           //     if(user){}
-           //     throw new Error('this email already in use');
-           // });
-    });
+    // findUserByEmail(req.body.email,function(err, user) {
+    //     if (user == true) {
+    //         req.check('email', "Email already exist").equals(null);
+    //
+    //     }else if(user == null){
+    //         req.check('email', "Email already exist").equals(req.body.email);
+    //     }
+    //     errors = req.validationErrors();
+    // });
+function sumErrors(){
     var errors = req.validationErrors();
     if (errors) {
         req.session.errors = errors;
@@ -109,7 +96,25 @@ router.post('/signIn', function (req, res, next) {
         });
 
     }
-    res.redirect(url.format({pathname: '/', query: {'success': req.session.success, 'resource': 'signIn'}}));
+}
+    function successCallback(result) {
+        console.log("It succeeded with " + result);
+        req.check('email', "Email already exist").equals(null);
+        sumErrors();
+        res.redirect(url.format({pathname: '/', query: {'success': req.session.success, 'resource': 'signIn'}}));
+    }
+
+    function failureCallback(error) {
+        req.check('email', "Email already exist").equals(req.body.email);
+        console.log("It failed with " + error);
+        sumErrors()
+            res.redirect(url.format({pathname: '/', query: {'success': req.session.success, 'resource': 'signIn'}}));
+    }
+
+findUserByEmail(req.body.email).then(successCallback,failureCallback);
+
+
+
 });
 
 router.get('/signIn', function (req, res) {
