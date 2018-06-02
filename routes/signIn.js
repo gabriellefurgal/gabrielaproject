@@ -62,15 +62,7 @@ router.post('/signIn', function (req, res, next) {
     req.check('password', 'passwords must contain at least one number').matches(/\d/);
     req.check('passwordConfirmation', 'passwords must be the same as password confirmation').equals(req.body.password);
 
-    // findUserByEmail(req.body.email,function(err, user) {
-    //     if (user == true) {
-    //         req.check('email', "Email already exist").equals(null);
-    //
-    //     }else if(user == null){
-    //         req.check('email', "Email already exist").equals(req.body.email);
-    //     }
-    //     errors = req.validationErrors();
-    // });
+
 function sumErrors(){
     var errors = req.validationErrors();
     if (errors) {

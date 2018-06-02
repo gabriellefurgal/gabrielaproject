@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var databases = require('../public/javascripts/mssql');
 var url = require('url');
+var bcrypt = require('bcryptjs');
 
 findUserByEmail = function (email, callback) {
     var query = "SELECT * FROM [dbo].[users]WHERE [email] = '" + email + "'";
@@ -16,13 +17,19 @@ findUserByEmail = function (email, callback) {
     });
 }
 checkUserWithPassword = function (credentials, callback) {
-    var query = "SELECT * FROM [dbo].[users]WHERE [email] = '" + credentials.email + "' AND [password]='" + credentials.password + "'";
+
+    var query = "SELECT * FROM [dbo].[users]WHERE [email] = '" + credentials.email + "'";
     databases.sendRequestToApplicationDB(query, function (res, err) {
         if (err) return callback(err);
         if (res.recordset.length > 0) {
-            var user={ Name:res.recordset[0].userFirstName,
-            Email: res.recordset[0].email}
-            return callback(null, user);
+            if(bcrypt.compareSync(credentials.password, res.recordset[0].password)){
+                var user={ Name:res.recordset[0].userFirstName,
+                    Email: res.recordset[0].email}
+                return callback(null, user);
+            }else {
+                return callback(null, null);
+            }
+
         } else {
             return callback(null, null);
         }

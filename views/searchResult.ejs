@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-md-10">
+            <div class="list-group">
+                <% if(place.recordset[0].name === "NoDATA" && place.recordset[0].presentName === "NoDATA"){ %>
+                <div class="alert alert-warning">
+                    <strong>Ups..</strong> We're sorry, but we did not find such a place in our dictionary data.
+                </div>
+                <% } else{ %>
+                <% place.recordset.forEach(function(record){ %>
+                <a href='/see?rid=<%= record.ID %>' class="list-group-item list-group-item-action">
+                    <div>
+                        <h2><%= record.name %></h2>
+                        <h5><%= record.foreignname %></h5>
+                        <p><%= record.presentName %></p>
+                        <span><%= record.gmina %>,<%= record.powiat %>, <%= record.wojewodztwo %></span>
+                        <p><%= record.shortdescription %></p>
+                    </div>
+                </a>
+                <% }); } %>
+            </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+

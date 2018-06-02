@@ -5,20 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= title %></title>
+
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Raleway:400,800">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
           integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
 
     <link rel="stylesheet" href="stylesheets/style.css"/>
+
 </head>
 <body>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <% if(!userSession || userSession == "undefined"){ %>
+            <% if(!userSession || userSession === "undefined"){ %>
             <div id="navbar">
                 <% include navLogIn.ejs %>
             </div>
@@ -36,14 +38,16 @@
                             <div id="alerts">
                                 <% if (success && resource == 'signIn'){ %>
                                 <section class="success">
-                                    <div class="alert alert-success">
+                                    <div class="alert alert-success alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <h2>Successful Validation! You are registered.</h2>
                                     </div>
                                 </section>
                                 <% }else{ %>
                                 <% if(errors){ %>
                                 <section class="errors">
-                                    <div class="alert alert-danger">
+                                    <div class="alert alert-danger alert-dismissible">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
                                         <ul>
                                             <% errors.forEach(function(error){ %>
                                             <li><%= error.msg %></li>
@@ -55,8 +59,9 @@
                                 <% } %>
                                 <% } %>
                             </div>
-                        </div>
+
                         <% } %>
+                        </div>
                         <!--sign in log in-->
                         <div class="col-md-6">
 
@@ -72,86 +77,106 @@
                 </div>
 
             </div>
-            <div class="col-md-12">
-                <div class="row">
-                    <div class="col-md-6">
-                        <form class="form-inline search_form" action="searchForm" method="post">
-                            <input class="form-control mr-sm-2" type="text" name="searchValue">
-                            <button class="btn btn-primary my-2 my-sm-0" type="submit" id="searchButton">
-                                Search
-                            </button>
-                        </form>
-                    </div>
-                    <% if(userSession) { %>
-                    <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form class="form-inline search_form" action="searchForm" method="post">
+                                <input class="form-control mr-sm-2" type="text" name="searchValue"/>
+                                <button class="btn btn-primary my-2 my-sm-0" type="submit" id="searchButton">
+                                    Search
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-6">
+                        <% if(userSession && chosenElement) { %>
 
-                        <div class="btn-group-float-right edit_buttons" role="group">
 
-                            <button class="btn btn-secondary" onclick="changeToForm()" type="button">
-                                Improve
-                            </button>
-                            <button class="btn btn-secondary" type="button">
-                                Rate
-                            </button>
-                            <!--<div class="dropdown">-->
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">
-                                See Version
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Version 1</a>
-                                <a class="dropdown-item" href="#">Version 2</a>
-                                <a class="dropdown-item" href="#">Version 3</a>
+                            <div class="btn-group-float-right edit_buttons" role="group">
+
+                                <button class="btn btn-secondary" onclick="changeToForm()" type="button">
+                                    Improve
+                                </button>
+                                <button class="btn btn-secondary" onclick="javascript:window.location.reload(true)"
+                                        type="button">Back
+                                </button>
+                                <div class="btn-group">
+
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button"
+                                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                       aria-expanded="false">
+                                        See Version
+                                    </a>
+                                    <div class="dropdown-menu">
+                                        <% if(versions){ %>
+                                        <% versions.forEach(function(version){ %>
+                                        <a class="dropdown-item btn-group"
+                                           href='/see?v=<%= version.versionNumber %>&rid=<%= place.ID %>'><%= version.versionNumber %></a>
+
+                                        <% }); } %>
+                                    </div>
+                                </div>
+
                             </div>
-
-                            <!--</div>-->
-
-                            <button class="btn btn-secondary" type="button">
-                                Save
-                            </button>
-
+                            <% } %>
                         </div>
                     </div>
                 </div>
-                <% } %>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action active">Home</a>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <!--<div id="tree"></div>-->
+                            <div class="list-group">
+                                <div class="list-group-item active">
+                                    <h4 class="list-group-item-heading">
+                                        Voivodeships
+                                    </h4>
+                                </div>
+                                <% administration.voivodeships.forEach(function(adm){ %>
+                                <div class="list-group-item list-group-item-action">
+                                    <span href="#<%= adm.name %>" data-toggle="collapse"
+                                          class="iconPlus">+</span>
+                                    <a href="/sortByCountry?v=<%= adm.name %>"><%= adm.name %></a>
+                                </div>
 
-                    <div class="list-group-item">
-                        <h4 class="list-group-item-heading">
-                            Voivodeships
-                        </h4>
-                    </div>
-                    <div class="list-group-item justify-content-between">
-                        Country / powiaty<span class="badge badge-default badge-pill">14</span>
-                    </div>
+                                <div id="<%= adm.name %>" class="panel-collapse collapse countries">
+                                    <div class="list-group-item list-group-item active">
+                                        <h6 class="list-group-item-text">
+                                            Countries
+                                        </h6>
+                                    </div>
+                                    <% adm.countries.forEach(function(count){ %>
 
-                    <a href="#" class="list-group-item list-group-item-action justify-content-between">City/Village
-                        / miejscowosc
-                        <span class="badge bg-white badge-pill">14</span></a>
-                    <div class="list-group-item">
-                        Some city
+                                    <a href="/sortByCountry?country=<%= count.name %>&v=<%= adm.name %>"
+                                       class="list-group-item list-group-item-action "><%= count.name %></a>
+                                    <% }); %>
+                                </div>
+                                <% }); %>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-10">
+                        <% if(chosenElement){ %>
+                        <% include placeInfo.ejs %>
+                        <% }else{ %>
+                        <% include searchResult.ejs %>
+                        <% } %>
+                        </div>
                     </div>
-                    <a href="#" class="list-group-item active">
-                        Some other city
-                    </a>
                 </div>
+
             </div>
-            <% include placeInfo.ejs %>
-
         </div>
-
 
         <!--Okkk down in Help and about section-->
         <% include about.ejs %>
 
     </div>
 </div>
-</div>
+
 
 
 <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"
@@ -172,7 +197,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAFIRySRCulh5sctkrYE3ODCbOzc2AmPSo&callback=initMap"
         async defer></script>
 <script>
-    //    var $loadForm = $('#loadForm');
+
     var url = new URL(window.location);
     var $resource = url.searchParams.get('resource');
     var $success = url.searchParams.get('status');
@@ -183,7 +208,6 @@
     } else if ($resource == 'signIn' && !$success) {
         document.getElementById('signInForm').style.display = 'block';
     } else {
-        document.getElementById('alerts').style.display = 'none';
     }
     if ($success == null) {
         document.getElementById('logInForm').style.display = 'none';
@@ -214,5 +238,7 @@
     });
 
 </script>
+
+
 </body>
 </html>

@@ -20,6 +20,7 @@
     "express-partials": "^0.3.0",
     "express-session": "^1.15.6",
     "express-validator": "^5.1.2",
+    "font-awesome": "^4.7.0",
     "htmlparser": "^1.7.7",
     "jQuery": "^1.7.4",
     "jquery": "^1.9.1",
@@ -31,8 +32,8 @@
     "p5": "^0.6.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "patternfly-bootstrap-treeview": "^2.1.5",
     "popper.js": "^1.12.9",
-    "serve-favicon": "~2.4.5",
     "xml2js": "^0.4.19",
     "xregexp": "^4.1.1"
   }

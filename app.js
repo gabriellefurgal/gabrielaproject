@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -14,18 +13,14 @@ var users = require('./routes/users');
 var placeInfo = require('./routes/placeInfo');
 var signIn= require('./routes/signIn');
 var logIn= require('./routes/logIn');
-var indexSignIn= require('./routes/indexSignUp');
-var indexLogIn= require('./routes/indexLogIn');
+var searchResult = require('./routes/searchResult');
 
 var app = express();
 
 app.set(NODE_ENV="development");
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
 
 app.use(logger('dev'));
@@ -38,22 +33,12 @@ app.use(expressSession({saveUninitialized: true,
     resave: true,
     secret: "This is a secret"}));
 app.use('/', index);
-app.use('/users', users);
 app.use(placeInfo);
 app.use(signIn);
 app.use(logIn);
+app.use(searchResult);
 app.use(expressPartials);
 
-// // Passport Config
-// require('./config/passport')(passport);
-// Passport Middleware
-// app.use(passport.initialize());
-// app.use(passport.session());
-//
-// app.get('*', function(req, res, next){
-//   res.locals.users = req.user || null;
-//   next();
-// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

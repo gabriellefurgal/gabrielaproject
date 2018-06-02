@@ -116,7 +116,7 @@ section.errors ul {
     color: #464a4c;
     opacity: 1;
     min-height: 100px;
-    display:inline-block;
+    display: inline-block;
     overflow:hidden;
     width: 100%;
     padding: .5rem .75rem;
@@ -126,9 +126,51 @@ section.errors ul {
     border: 1px solid rgba(0,0,0,.15);
     border-radius: .25rem;
     font-family: sans-serif;
+    overflow-y: scroll;
+    overflow-x: auto;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
 }
 .myEditAbleDiv:focus {
     border-color: #5cb3fd;
 
 }
+
+a.carousel-control-prev, a.carousel-control-next {
+    background: black;
+    color: red;
+    border: none;
+    top: 45%;
+    bottom: 45%;
+    width: 12%;
+    opacity: 0.3;
+}
+a.carousel-control-prev {margin-left: -20px; margin-right: 10px; color: black;}
+a.carousel-control-next {margin-right: -20px; margin-left: 10px; color: black;}
+.carouselExampleControls{
+    marigin-left:50px;
+    marigin-right:50px;
+}
+
+
+.countries{
+    max-height: 300px;
+    overflow-y: scroll;
+    overflow-x: auto;
+}
+
+
+.iconPlus{
+    font-size: 26px;
+    color: #0275d8;
+    font-weight: bold;
+    margin-right: 5px;
+}
+.list-group{
+    white-space: normal;
+    min-width: 200px;
+}
+.list-group-item{
+    display: inline-block;
+}
+
+
