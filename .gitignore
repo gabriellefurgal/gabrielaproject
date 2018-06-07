@@ -1,3 +1,10 @@
 node_modules/
 /routers/effTest.js
 /views/effTest.ejsnode_modules
+.idea/workspace.xml
+public/images/OCRtextOutput/
+public/images/OCRtextOutput2/
+public/myJStries/dictionaryOCR.txt
+views/effTest.ejs
+sh.exe.stackdump
+routes/effTest.js
