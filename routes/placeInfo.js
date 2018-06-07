@@ -131,13 +131,7 @@ router.get('/see', function (req, res, next) {
                                     res.render('index', {
                                         title: "Application",
                                         place: recordsset.recordset[0],
-                                        placeGUS: {
-                                        recordset: [{
-                                            voivodeship: 'NoDATA',
-                                            country: 'NoDATA',
-                                            community: 'NoDATA'
-                                        }]
-                                    },
+                                        placeGUS: records.recordset[0],
                                         references: references,
                                         scanFile: {
                                             recordset: [{fileName: "NoDataFound"}]
@@ -151,7 +145,33 @@ router.get('/see', function (req, res, next) {
                                         versions: false,
                                         chosenElement: true
                                     });
-                                } else if (records.recordset.length === 0) {
+                                } else if (ScanfileName.recordset.length === 0 && records.recordset.length === 0) {
+                                    res.render('index', {
+                                        title: "Application",
+                                        place: recordsset.recordset[0],
+                                        placeGUS: {
+                                            recordset: [{
+                                                voivodeship: 'NoDATA',
+                                                country: 'NoDATA',
+                                                community: 'NoDATA'
+                                            }]
+                                        },
+                                        references: references,
+                                        scanFile: {
+                                            recordset: [{fileName: "NoDataFound"}]
+                                        },
+                                        success: req.session.success,
+                                        errors: req.session.errors,
+                                        resource: req.query.resource,
+                                        userSession: req.session.user,
+                                        cookies: req.cookies,
+                                        administration: administration,
+                                        versions: false,
+                                        chosenElement: true
+                                    });
+
+
+                            }else if (records.recordset.length === 0) {
                                     res.render('index', {
                                         title: "Application",
                                         place: recordsset.recordset[0],
@@ -252,52 +272,6 @@ router.post('/saveChanges', function (req, res) {
     }
 
 
-    // function successCallback(result) {
-    //     console.log("It succeeded with " + result);
-    //     var newVersion = {
-    //         versionNumber: result.version + 1,
-    //         userID: req.session.user.userID,
-    //         data: '23.05.2017'.toDate()
-    //     }
-    //
-    //     addNewRecordVersion(newRecordVersion, function (err) {
-    //         if (err) {
-    //             console.log(err);
-    //             return;
-    //         } else {
-    //             addNewVersion(newVersion, function (err) {
-    //                 if (err) {
-    //                     console.log(err);
-    //                     return;
-    //                 }
-    //             });
-    //         }
-    //     });
-    // }
-    //
-    // function failureCallback(error) {
-    //     req.check('email', "Email already exist").equals(req.body.email);
-    //     var newVersion = {
-    //         versionNumber: 1,
-    //         userID: req.session.user.userID,
-    //         data: '23.05.2017'.toDate()
-    //     }
-    //
-    //     addNewRecordVersion(newRecordVersion, function (err) {
-    //         if (err) {
-    //             console.log(err);
-    //             return;
-    //         } else {
-    //             addNewVersion(newVersion, function (err) {
-    //                 if (err) {
-    //                     console.log(err);
-    //                     return;
-    //                 }
-    //             });
-    //         }
-    //     });
-    // }
-    // findRecordByDicName(req.body.placeName).then(successCallback,failureCallback);
     var datetime = new Date();
     var newVersion = {
         userMail: req.session.user.Email,
@@ -318,16 +292,6 @@ router.post('/saveChanges', function (req, res) {
 
     };
 
-    // addNewVersion = function (newVersion, f) {
-    //     var query = "INSERT INTO [dbo].[versions]([versionNumber],[userID],[date]) VALUES('" + newVersion.versionNumber + "', '" + newVersion.userID + "', '" + '2012-06-18 10:34:09' + "')";
-    //     databases.sendRequestToApplicationDB(query, function (err, result) {
-    //         if (err) {
-    //             console.log(err);
-    //             f = err;
-    //         }
-    //     });
-    //
-    // };
 
 
     addNewRecordVersion(newRecordVersion, function (err) {
@@ -335,14 +299,6 @@ router.post('/saveChanges', function (req, res) {
             console.log(err);
             return;
         }
-        // else {
-        //     addNewVersion(newVersion, function (err) {
-        //         if (err) {
-        //             console.log(err);
-        //             return;
-        //         }
-        //     });
-        // }
     });
     res.redirect('/see?rid='+newRecordVersion.dictionaryID+'');
 

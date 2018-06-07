@@ -16,7 +16,7 @@ router.get('/home', function (req, res, next) {
 //GET API
 router.get("/", function (req, res,next) {
     res.setHeader('Last-Modified', (new Date()).toUTCString());
-      var query = "SELECT * ,l.[to] as presentName, p.id as ID FROM [Silesia].[dbo].[Places] As p INNER JOIN [Silesia].[dbo].[Description] As d ON d.placename= p.name LEFT JOIN [Silesia].[dbo].[Links] As l ON l.[from]=d.placename;";
+      var query = "SELECT * ,l.[to] as presentName, p.id as ID FROM [Silesia].[dbo].[Places] As p INNER JOIN [Silesia].[dbo].[Description] As d ON d.placename= p.name LEFT JOIN [Silesia].[dbo].[Links] As l ON l.[from]=d.placename ORDER BY p.name;";
     databases.functionDB(query, function (recordsset) {
         databases.getVoivodeships(function (administration){
                if (recordsset.recordset.length == 0) {

@@ -4,14 +4,12 @@ var infowindow;
 function initMap() {
     var pyrmont = {lat: -33.867, lng: 151.195};
     var my_place = document.getElementById('placeName').textContent.toLowerCase();
-   var my_placePresent = document.getElementById('placePresentName').textContent.toLowerCase();
     var voivodeship = document.getElementById('placeVoivodeship').textContent.toLowerCase();
     var country = document.getElementById('placeCountry').textContent.toLowerCase();
     var community = document.getElementById('placeCommunity').textContent.toLowerCase();
-    if (my_placePresent === "") {
+
         my_placePresent = my_place;
-        console.log("heeej this is");
-    }
+
 
     var geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {

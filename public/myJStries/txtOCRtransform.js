@@ -9,7 +9,7 @@ var records = [];
 var divadedDictionary = [];
 
 
-const OCRtextFolder = '../images/OCRtextOutput/';
+const OCRtextFolder = '../images/OCRtextOutput2/';
 
 fs.readdir(OCRtextFolder, function (err, files) {
     files.forEach(function (file) {

@@ -7,6 +7,9 @@ var expressValidator =require('express-validator');
 var expressSession =require('express-session');
 var expressPartials = require('express-partials');
 var passport = require('passport');
+var compression = require('compression');
+var helmet = require('helmet');
+var debug = require('debug')('author');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -14,10 +17,14 @@ var placeInfo = require('./routes/placeInfo');
 var signIn= require('./routes/signIn');
 var logIn= require('./routes/logIn');
 var searchResult = require('./routes/searchResult');
+var effTest = require('./routes/effTest');
+var compression = require('compression');
+
 
 var app = express();
 
-app.set(NODE_ENV="development");
+app.use(helmet());
+app.set(NODE_ENV="production");
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -28,11 +35,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
+
+app.use(compression()); //Compress all routes
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(expressSession({saveUninitialized: true,
     resave: true,
     secret: "This is a secret"}));
 app.use('/', index);
+app.use('/test', effTest);
 app.use(placeInfo);
 app.use(signIn);
 app.use(logIn);
@@ -58,4 +68,18 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+// Display Author update form on GET
+exports.author_update_get = function(req, res, next) {
+
+    req.sanitize('id').escape().trim();
+    Author.findById(req.params.id, function(err, author) {
+        if (err) {
+            debug('update error:' + err);
+            return next(err);
+        }
+        //On success
+        res.render('author_form', { title: 'Update Author', author: author });
+    });
+
+};
 module.exports = app;

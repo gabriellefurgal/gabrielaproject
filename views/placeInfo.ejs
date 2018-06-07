@@ -35,8 +35,6 @@
             <dl class="row">
                 <dt class="col-sm-4">Name:</dt>
                 <dd class="col-sm-8" id="placeName"><%= place.name %></dd>
-                <dt class="col-sm-4">Present Name:</dt>
-                <dd class="col-sm-8" id="placePresentName"><%= place.presentName %></dd>
                 <dt class="col-sm-4">Type:</dt>
                 <dd class="col-sm-8"><%= place.type %></dd>
 
@@ -210,16 +208,16 @@
                             <label for="references">
                                 References
                             </label>
+                            <% if(!references){ %>
                             <textarea class="input myEditAbleDiv" id="references" name="references" rows="8"
-                                      autofocus>
-                                <% if(!references){ %>
-                                <%= referencesVersion %>
-                                <% }else{ %>
-                                <% references.forEach(function(reference){ %>
-                                <%= reference.name %>, <%= reference.year %>,<%= reference.source %>
-                                ,<%= reference.page %> ;
-                                <% }); } %>
-                            </textarea>
+                                      autofocus>  <%= referencesVersion %></textarea>
+                           <% }else{ var ref=''; %>
+                            <% references.forEach(function(reference){ %>
+                          <% ref= ref+reference.name +","+ reference.year +","+reference.source+","+ reference.page +"; \n"; %>
+                            <% }); %>
+                            <textarea class="input myEditAbleDiv" id="references" name="references" rows="8"
+                                      autofocus> <%=ref%></textarea>
+                            <%} %>
                         </div>
                     </div>
 
